@@ -1,0 +1,127 @@
+<div layout="column" class="height100p">
+    <section layout="row" flex class="height100p">
+        <md-sidenav class="md-sidenav-left md-whiteframe-z2 height100p" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+            <md-toolbar class="md-theme-indigo">
+                <h1 class="md-toolbar-tools">{{currentSection.name}}</h1>
+            </md-toolbar>
+            <md-content layout-padding>
+                <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                    Close Sidenav Left
+                </md-button>
+                <div ng-if="currentSection.id != 0" ng-repeat="question in questions" ng-click="addQuestion(question)">
+                    {{question.name}}
+                </div>
+                <div ng-if="currentSection.id == 0" ng-repeat="section in sections" ng-click="addSection(section)">
+                    {{section.name}}
+                </div>
+                <form ng-if="currentSection.id == 0" ng-submit="createSection(newSection)">
+                    <md-input-container flex>
+                        <label>New section</label>
+                        <input ng-model="newSection.name">
+                    </md-input-container>
+                    <input type="submit">
+                </form>
+                <form ng-if="currentSection.id != 0" ng-submit="createQuestion(newQuestion)">
+                    <md-input-container flex>
+                        <label>New question</label>
+                        <input ng-model="newQuestion.name">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <md-select placeholder="Type" ng-model="newQuestion.type">
+                            <md-option ng-repeat="type in types" value="{{type}}">{{type}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div ng-if="newQuestion.type == 'scale'">
+                        <md-input-container flex>
+                            <label>Step</label>
+                            <input type="number" ng-model="newQuestion.step">
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>Min</label>
+                            <input type="number" ng-model="newQuestion.min">
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>Max</label>
+                            <input type="number" ng-model="newQuestion.max">
+                        </md-input-container>
+                    </div>
+                    <div  ng-if="newQuestion.type == 'text' ||
+                                            newQuestion.type == 'date' ||
+                                            newQuestion.type == 'number'
+                                            ">
+                        <md-input-container flex>
+                            <label>MinLength</label>
+                            <input type="number" ng-model="newQuestion.minlength">
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>MaxLength</label>
+                            <input type="number" ng-model="newQuestion.maxlength">
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>isRequire</label>
+                            <md-switch ng-model="newQuestion.isRequire" aria-label="isRequire">
+                                isRequire: {{ newQuestion.isRequire }}
+                            </md-switch>
+                        </md-input-container>
+                    </div>
+                    <input type="submit">
+                </form>
+            </md-content>
+        </md-sidenav>
+        <md-content flex layout-padding>
+            <div layout="column" layout-fill layout-align="top center">
+                <md-button ng-click="toggleLeft()"
+                           class="md-primary" hide-gt-md>
+                    Toggle left
+                </md-button>
+                <div ng-if="currentSection.id != 0" ng-repeat="question in selectedQuestions">
+                    <form name="{{form.name}}">
+                        <md-input-container flex
+                                            ng-if="question.type == 'text' ||
+                                            question.type == 'date' ||
+                                            question.type == 'number'
+                                            ">
+                            <label>{{question.name}}</label>
+                            <input md-maxlength="{{question.maxlength}}"
+                                   md-minlength="{{question.minlength}}"
+                                   required="{{question.isRequire}}"
+                                   name="{{question.name}}"
+                                   type="{{question.type}}"
+                                   ng-model="question.response"
+                                   >
+                            <div ng-init="errorPath = form.name + '.' + question.name + '.$error'"
+                                 ng-messages="errorPath">
+                                <div ng-message="required">This is required.</div>
+                                <div ng-message="md-maxlength">
+                                    The name has to be less than {{question.maxlength}} characters long.
+                                </div>
+                                <div ng-message="md-minlength">
+                                    The name has to be less than {{question.minlength}} characters long.
+                                </div>
+                            </div>
+                        </md-input-container>
+                    </form>
+                    <div ng-if="question.type == 'scale'">
+                        {{question.name}}
+                        <md-slider flex
+                                   class="md-primary"
+                                   md-discrete
+                                   step="{{question.step}}" min="{{question.min}}" max="{{question.max}}"
+                                   aria-label="question.name">
+                        </md-slider>
+                    </div>
+                </div>
+                <div ng-if="currentSection.id == 0" ng-repeat="section in selectedSections">
+                    {{section.name}}
+                </div>
+                <md-button ng-if="prevSection" class="md-primary" ng-click="changeCurrentSection(prevSection)">
+                    Prev
+                </md-button>
+                <md-button ng-if="nextSection" class="md-primary" ng-click="changeCurrentSection(nextSection)">
+                    Next
+                </md-button>
+            </div>
+            <div flex></div>
+        </md-content>
+    </section>
+</div>
