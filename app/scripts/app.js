@@ -19,7 +19,8 @@ var app = angular
     'ngSanitize',
     'ngTouch',
     'ngMaterial',
-    'ui.sortable'
+    'ui.sortable',
+    'mm.foundation'
   ])
   .config(function ($routeProvider) {
     $routeProvider

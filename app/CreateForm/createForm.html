@@ -75,8 +75,8 @@
                 </form>
             </md-content>
         </md-sidenav>
-        <md-content flex layout-padding>
-            <div layout="column" layout-fill layout-align="top center">
+        <md-content layout-padding class="width100p">
+            <div>
                 <md-button ng-click="toggleLeft()"
                            class="md-primary" hide-gt-md>
                     Toggle left
@@ -146,10 +146,10 @@
                         </md-content>
                     </md-whiteframe>
                 </div>
-                <md-button ng-if="currentSection >= 0" class="md-primary" ng-click="prevSection()">
+                <md-button class="md-raised md-primary column small-5" ng-if="currentSection >= 0" ng-click="prevSection()">
                     Prev
                 </md-button>
-                <md-button ng-if="currentSection < form.sections.length -1" class="md-primary" ng-click="nextSection()">
+                <md-button class="md-raised md-primary column small-5 float-right" ng-if="currentSection < form.sections.length -1" ng-click="nextSection()">
                     Next
                 </md-button>
             </div>
