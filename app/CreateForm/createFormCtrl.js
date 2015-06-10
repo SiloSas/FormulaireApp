@@ -78,6 +78,9 @@ app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil
             );
         }
     };
+    $scope.delSection = function (index) {
+        $scope.form.sections.splice(index, 1)
+    };
     $scope.addQuestion = function (question) {
         if ($scope.form.sections[$scope.currentSection].questions.indexOf(question) == -1) {
             $scope.form.sections[$scope.currentSection].questions.push(question)
@@ -89,6 +92,10 @@ app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil
                     .hideDelay(3000)
             );
         }
+    };
+
+    $scope.delQuestion = function (index) {
+        $scope.form.sections[$scope.currentSection].questions.splice(index, 1)
     };
 
     $scope.toastPosition = {

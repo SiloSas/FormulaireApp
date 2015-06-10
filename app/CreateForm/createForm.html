@@ -38,15 +38,15 @@
                     <div ng-if="newQuestion.type == 'scale'">
                         <md-input-container flex>
                             <label>Step</label>
-                            <input type="number" ng-model="newQuestion.step">
+                            <input type="number" required="true" ng-model="newQuestion.step">
                         </md-input-container>
                         <md-input-container flex>
                             <label>Min</label>
-                            <input type="number" ng-model="newQuestion.min">
+                            <input type="number" required="true" ng-model="newQuestion.min">
                         </md-input-container>
                         <md-input-container flex>
                             <label>Max</label>
-                            <input type="number" ng-model="newQuestion.max">
+                            <input type="number" required="true" ng-model="newQuestion.max">
                         </md-input-container>
                     </div>
                     <div ng-if="newQuestion.type == 'text' ||
@@ -75,83 +75,91 @@
                 </form>
             </md-content>
         </md-sidenav>
-        <md-content layout-padding class="width100p">
-            <div>
-                <md-button ng-click="toggleLeft()"
-                           class="md-primary" hide-gt-md>
-                    Toggle left
-                </md-button>
-                <h1>{{form.name}}</h1>
-                <div ng-if="currentSection != -1">
+        <md-content layout class="float-left width100p">
+            <div class="width100p">
+                <md-toolbar class="md-primary" style="overflow: hidden">
+                    <div class="md-toolbar-tools">
+                        <md-button ng-click="toggleLeft()"
+                                   class="md-fab md-primary md-hue-2 md-mini" aria-label="Edit" hide-gt-md>
+                            <i class="fa fa-pencil"></i>
+                        </md-button>
+                        <h1 class="md-flex">{{form.name}}</h1>
+                    </div>
+                </md-toolbar>
+                <div class="column">
+                    <div ng-if="currentSection != -1">
                     <h2>{{form.sections[currentSection].name}}</h2>
-                    <form name="{{form.name}}" data-as-sortable ng-model="form.sections[currentSection].questions">
-                        <div ng-repeat="question in form.sections[currentSection].questions"
-                             data-as-sortable-item>
-                            <md-input-container flex
-                                            ng-if="question.type == 'text' ||
-                                            question.type == 'date' ||
-                                            question.type == 'number' ||
-                                            question.type == 'color'
-                                            ">
-                                <label>{{question.name}}</label>
-                                <input md-maxlength="{{question.maxlength}}"
-                                       md-minlength="{{question.minlength}}"
-                                       ng-required="question.isRequire"
-                                       name="$index"
-                                       type="{{question.type}}"
-                                       ng-model="question.testResponse"
-                                       data-as-sortable-item-handle
-                                       >
-                                <div ng-messages="newForm.$index.$error">
-                                    <div ng-message="required" ng-if="question.isRequire">This is required.</div>
-                                    <div ng-message="md-maxlength">
-                                        The name has to be less than {{question.maxlength}} characters long.
-                                    </div>
-                                    <div ng-message="md-minlength">
-                                        The name has to be less than {{question.minlength}} characters long.
-                                    </div>
-                                </div>
-                            </md-input-container>
-                            <div ng-if="question.type == 'scale'">
-                                <b data-as-sortable-item-handle>{{question.name}}</b>
-                                <md-slider flex
-                                           class="md-primary"
-                                           md-discrete
+                        <form name="{{form.name}}" data-as-sortable ng-model="form.sections[currentSection].questions">
+                            <div ng-repeat="question in form.sections[currentSection].questions"
+                                 data-as-sortable-item>
+                                <i class="float-right pointer fa fa-times" ng-click="delQuestion($index)"></i>
+                                <md-input-container flex
+                                                ng-if="question.type == 'text' ||
+                                                question.type == 'date' ||
+                                                question.type == 'number' ||
+                                                question.type == 'color'
+                                                ">
+                                    <label>{{question.name}}</label>
+                                    <input md-maxlength="{{question.maxlength}}"
+                                           md-minlength="{{question.minlength}}"
+                                           ng-required="question.isRequire"
+                                           name="$index"
+                                           type="{{question.type}}"
                                            ng-model="question.testResponse"
-                                           step="{{question.step}}" min="{{question.min}}" max="{{question.max}}"
-                                           aria-label="question.name">
-                                </md-slider>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div ng-if="currentSection == -1" data-as-sortable ng-model="form.sections">
-                    <md-whiteframe class="md-whiteframe-z1" style="float: left; width: 100%"
-                                   ng-repeat="section in form.sections"
-                                   data-as-sortable-item>
-                        <h2 style="float: left; margin-left: 10px" data-as-sortable-item-handle>{{section.name}}</h2>
-                        <md-button style="float: right;" class="md-fab md-primary"
-                                   ng-show="section.questions.length > 0"
-                                   ng-click="viewQuestions = !viewQuestions">view</md-button>
-                        <md-button style="float: right;" class="md-fab md-primary" ng-click="changeCurrentSection($index)">Edit</md-button>
-                        <md-content  ng-if="viewQuestions" style="width: 100%">
-                            <md-list>
-                                <md-list-item class="md-3-line" ng-repeat="question in section.questions">
-                                    <div class="md-list-item-text">
-                                        <h3>{{question.name}}</h3>
+                                           data-as-sortable-item-handle
+                                           >
+                                    <div ng-messages="newForm.$index.$error">
+                                        <div ng-message="required" ng-if="question.isRequire">This is required.</div>
+                                        <div ng-message="md-maxlength">
+                                            The name has to be less than {{question.maxlength}} characters long.
+                                        </div>
+                                        <div ng-message="md-minlength">
+                                            The name has to be less than {{question.minlength}} characters long.
+                                        </div>
                                     </div>
-                                    <md-divider ng-if="!$last"></md-divider>
-                                </md-list-item>
-                            </md-list>
-                        </md-content>
-                    </md-whiteframe>
+                                </md-input-container>
+                                <div ng-if="question.type == 'scale'">
+                                    <b data-as-sortable-item-handle>{{question.name}}</b>
+                                    <md-slider flex
+                                               class="md-primary"
+                                               md-discrete
+                                               ng-model="question.testResponse"
+                                               step="{{question.step}}" min="{{question.min}}" max="{{question.max}}"
+                                               aria-label="question.name">
+                                    </md-slider>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div ng-if="currentSection == -1" data-as-sortable ng-model="form.sections">
+                        <md-whiteframe class="md-whiteframe-z1" style="float: left; width: 100%"
+                                       ng-repeat="section in form.sections"
+                                       data-as-sortable-item>
+                            <i class="float-right pointer fa fa-times" ng-click="delSection($index)"></i>
+                            <h2 style="float: left; margin-left: 10px" data-as-sortable-item-handle>{{section.name}}</h2>
+                            <md-button style="float: right;" class="md-fab md-primary"
+                                       ng-show="section.questions.length > 0"
+                                       ng-click="viewQuestions = !viewQuestions">view</md-button>
+                            <md-button style="float: right;" class="md-fab md-primary" ng-click="changeCurrentSection($index)">Edit</md-button>
+                            <md-content  ng-if="viewQuestions" style="width: 100%">
+                                <md-list>
+                                    <md-list-item class="md-3-line" ng-repeat="question in section.questions">
+                                        <div class="md-list-item-text">
+                                            <h3>{{question.name}}</h3>
+                                        </div>
+                                        <md-divider ng-if="!$last"></md-divider>
+                                    </md-list-item>
+                                </md-list>
+                            </md-content>
+                        </md-whiteframe>
+                    </div>
+                    <md-button class="md-raised md-primary column small-5" ng-if="currentSection >= 0" ng-click="prevSection()">
+                        Prev
+                    </md-button>
+                    <md-button class="md-raised md-primary column small-5 float-right" ng-if="currentSection < form.sections.length -1" ng-click="nextSection()">
+                        Next
+                    </md-button>
                 </div>
-                <md-button class="md-raised md-primary column small-5" ng-if="currentSection >= 0" ng-click="prevSection()">
-                    Prev
-                </md-button>
-                <md-button class="md-raised md-primary column small-5 float-right" ng-if="currentSection < form.sections.length -1" ng-click="nextSection()">
-                    Next
-                </md-button>
             </div>
         </md-content>
     </section>
