@@ -91,7 +91,7 @@
                     <h2>{{form.sections[currentSection].name}}</h2>
                         <form name="{{form.name}}" data-as-sortable ng-model="form.sections[currentSection].questions">
                             <div ng-repeat="question in form.sections[currentSection].questions"
-                                 data-as-sortable-item>
+                                 data-as-sortable-item class="fade">
                                 <i class="float-right pointer fa fa-times" ng-click="delQuestion($index)"></i>
                                 <md-input-container flex
                                                 ng-if="question.type == 'text' ||
@@ -132,7 +132,7 @@
                         </form>
                     </div>
                     <div ng-if="currentSection == -1" data-as-sortable ng-model="form.sections">
-                        <md-whiteframe class="md-whiteframe-z1" style="float: left; width: 100%"
+                        <md-whiteframe class="md-whiteframe-z1 fade" style="float: left; width: 100%"
                                        ng-repeat="section in form.sections"
                                        data-as-sortable-item>
                             <i class="float-right pointer fa fa-times" ng-click="delSection($index)"></i>
