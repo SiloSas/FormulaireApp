@@ -22,57 +22,54 @@ app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil
     };
 
     $scope.questions = [];
-    $scope.form = {name : 'newForm'};
+    $scope.form = {
+        name : 'newForm',
+        sections: []
+        
+    };
     $scope.types = ['text', 'date', 'number', 'scale'];
-    $scope.selectedQuestions = [];
     $scope.newSection = {};
     $scope.newQuestion = {};
     $scope.sections = [{name: 'design', id: 1}, {name:'general', id:2}, {name: 'commercial', id:3}];
-    $scope.selectedSections = [];
-    $scope.currentSection = {name: 'Add sections', id: 0};
-    $scope.changeCurrentSection = function (newSection) {
-        $scope.currentSection = newSection;
-        console.log($scope.selectedSections.indexOf(newSection));
-        if ($scope.selectedSections.indexOf(newSection) < $scope.selectedSections.length) {
-            $scope.nextSection = $scope.selectedSections [$scope.selectedSections.indexOf(newSection) + 1]
-        } else {
-            $scope.nextSection = false;
-        }
-        if ($scope.selectedSections.indexOf(newSection) > 0) {
-            $scope.prevSection = $scope.selectedSections[$scope.selectedSections.indexOf(newSection) - 1]
-        } else if ($scope.selectedSections.indexOf(newSection) == 0) {
-            $scope.prevSection = {name: 'Add sections', id: 0};
-        }
+    $scope.currentSection = -1;
+    $scope.prevSection = function () {
+        $scope.currentSection--
+    };
+    $scope.nextSection = function () {
+        $scope.currentSection++
+    };
+    $scope.changeCurrentSection = function (index) {
+        $scope.currentSection = index;
     };
     $scope.createSection = function (newSection) {
         if ($filter('filter')($scope.sections, 'name', newSection.name).length == 0) {
-            $scope.sections.push(newSection)
+            $scope.sections.push(newSection);
+            //post new section
         }
-        if ($filter('filter')($scope.selectedSections, 'name', newSection.name).length == 0) {
-            $scope.selectedSections.push(newSection);
+        if ($filter('filter')($scope.form.sections, 'name', newSection.name).length == 0) {
+            $scope.form.sections.push(newSection);
         }
         $scope.newSection = {}
     };
     $scope.createQuestion = function (newQuestion) {
         if ($filter('filter')($scope.questions, 'name', newQuestion.name).length == 0) {
-            $scope.questions.push(newQuestion)
+            $scope.questions.push(newQuestion);
+            //post new question
         }
-        if ($filter('filter')($scope.selectedQuestions, 'name', newQuestion.name).length == 0) {
-            $scope.selectedQuestions.push(newQuestion)
+        if ($filter('filter')($scope.form.sections[$scope.currentSection].questions, 'name', newQuestion.name).length == 0) {
+            $scope.form.sections[$scope.currentSection].questions.push(newQuestion)
         }
         $scope.newQuestion = {}
     };
     $scope.addSection = function (section) {
-        if ($scope.selectedSections.indexOf(section) == -1) {
-            $scope.selectedSections.push(section);
-            if ($scope.selectedSections.length == 1) {
-                $scope.nextSection = section;
-            }
+        if ($scope.form.sections.indexOf(section) == -1) {
+            section.questions = [];
+            $scope.form.sections.push(section);
         }
     };
     $scope.addQuestion = function (question) {
         var newQuestion = {};
         newQuestion.name = question.name;
-        $scope.selectedQuestions.push(newQuestion)
+        $scope.form.sections[$scope.currentSection].questions.push(newQuestion)
     }
 });
