@@ -81,10 +81,12 @@
                            class="md-primary" hide-gt-md>
                     Toggle left
                 </md-button>
+                <h1>{{form.name}}</h1>
                 <div ng-if="currentSection != -1">
                     <h2>{{form.sections[currentSection].name}}</h2>
-                    <form name="{{form.name}}">
-                        <div ng-repeat="question in form.sections[currentSection].questions">
+                    <form name="{{form.name}}" data-as-sortable ng-model="form.sections[currentSection].questions">
+                        <div ng-repeat="question in form.sections[currentSection].questions"
+                             data-as-sortable-item>
                             <md-input-container flex
                                             ng-if="question.type == 'text' ||
                                             question.type == 'date' ||
@@ -98,6 +100,7 @@
                                        name="$index"
                                        type="{{question.type}}"
                                        ng-model="question.testResponse"
+                                       data-as-sortable-item-handle
                                        >
                                 <div ng-messages="newForm.$index.$error">
                                     <div ng-message="required" ng-if="question.isRequire">This is required.</div>
@@ -110,7 +113,7 @@
                                 </div>
                             </md-input-container>
                             <div ng-if="question.type == 'scale'">
-                                {{question.name}}
+                                <b data-as-sortable-item-handle>{{question.name}}</b>
                                 <md-slider flex
                                            class="md-primary"
                                            md-discrete
@@ -122,10 +125,11 @@
                         </div>
                     </form>
                 </div>
-                <div ng-if="currentSection == -1">
+                <div ng-if="currentSection == -1" data-as-sortable ng-model="form.sections">
                     <md-whiteframe class="md-whiteframe-z1" style="float: left; width: 100%"
-                                   ng-repeat="section in form.sections">
-                        <h2 style="float: left; margin-left: 10px">{{section.name}}</h2>
+                                   ng-repeat="section in form.sections"
+                                   data-as-sortable-item>
+                        <h2 style="float: left; margin-left: 10px" data-as-sortable-item-handle>{{section.name}}</h2>
                         <md-button style="float: right;" class="md-fab md-primary"
                                    ng-show="section.questions.length > 0"
                                    ng-click="viewQuestions = !viewQuestions">view</md-button>
