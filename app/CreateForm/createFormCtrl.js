@@ -1,4 +1,4 @@
-app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $filter) {
+app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $filter, $mdToast, $animate) {
     $scope.toggleLeft = buildToggler('left');
     /**
      * Build handler to open/close a SideNav; when animation finishes
@@ -69,11 +69,37 @@ app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil
         if ($scope.form.sections.indexOf(section) == -1) {
             section.questions = [];
             $scope.form.sections.push(section);
+        } else {
+            $mdToast.show(
+                $mdToast.simple()
+                    .content('La section est déjà présente dans le formulaire')
+                    .position($scope.getToastPosition())
+                    .hideDelay(3000)
+            );
         }
     };
     $scope.addQuestion = function (question) {
-        var newQuestion = {};
-        newQuestion.name = question.name;
-        $scope.form.sections[$scope.currentSection].questions.push(newQuestion)
-    }
+        if ($scope.form.sections[$scope.currentSection].questions.indexOf(question) == -1) {
+            $scope.form.sections[$scope.currentSection].questions.push(question)
+        } else {
+            $mdToast.show(
+                $mdToast.simple()
+                    .content('La question est déjà présente dans la section')
+                    .position($scope.getToastPosition())
+                    .hideDelay(3000)
+            );
+        }
+    };
+
+    $scope.toastPosition = {
+        bottom: false,
+        top: true,
+        left: false,
+        right: true
+    };
+    $scope.getToastPosition = function() {
+        return Object.keys($scope.toastPosition)
+            .filter(function(pos) { return $scope.toastPosition[pos]; })
+            .join(' ');
+    };
 });
