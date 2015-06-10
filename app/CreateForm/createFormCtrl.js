@@ -27,7 +27,7 @@ app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil
         sections: []
         
     };
-    $scope.types = ['text', 'date', 'number', 'scale'];
+    $scope.types = ['text', 'date', 'number', 'scale', 'color'];
     $scope.newSection = {};
     $scope.newQuestion = {};
     $scope.sections = [{name: 'design', id: 1}, {name:'general', id:2}, {name: 'commercial', id:3}];
@@ -52,6 +52,10 @@ app.controller('CreateFormCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil
         $scope.newSection = {}
     };
     $scope.createQuestion = function (newQuestion) {
+        if (newQuestion.type === undefined || newQuestion.type.length == 0) {
+            newQuestion.type = 'text';
+            newQuestion.isRequire = false
+        }
         if ($filter('filter')($scope.questions, 'name', newQuestion.name).length == 0) {
             $scope.questions.push(newQuestion);
             //post new question
